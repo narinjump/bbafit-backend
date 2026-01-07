@@ -1,1 +1,143 @@
 
+{
+  "meta": {
+    "engine": "BBA Major Fit Engine",
+    "version": "4.3",
+    "policy": "All output text must be selected only from this file. No free generation."
+  },
+
+  "dimensions": {
+    "LTP": {
+      "Structure_Learning": [1,5,9],
+      "Ambiguity_Learning": [2,6,10],
+      "Participation_Learning": [3,7,11],
+      "Persistence_Learning": [4,8,12]
+    },
+    "BCFM": {
+      "Structure_Work": [13,17,21,25,29],
+      "Data_Logic": [14,18,22,26,30],
+      "People_Engagement": [15,19,23,27],
+      "Resilience": [16,20,24,28]
+    }
+  },
+
+  "weights": {
+    "Accounting": {"Structure_Work":3.8,"Data_Logic":3.4,"People_Engagement":0.8,"Resilience":1.5},
+    "Finance": {"Structure_Work":2.2,"Data_Logic":3.2,"People_Engagement":1.2,"Resilience":3.4},
+    "Marketing": {"Structure_Work":1.4,"Data_Logic":0.9,"People_Engagement":4.2,"Resilience":2.0},
+    "Digital": {"Structure_Work":1.2,"Data_Logic":3.6,"People_Engagement":2.6,"Resilience":1.8}
+  },
+
+  "weight_normalization": {
+    "method": "divide_by_sum"
+  },
+
+  "hybrid_rule": {
+    "threshold": 1.5,
+    "digital_override": {
+      "if": "Data_Logic>=4.5 && Structure_Work<=1.5 && People_Engagement>=2.5",
+      "force_major": "Digital"
+    }
+  },
+
+  "interpretation_threshold": {
+    "high": 4.0,
+    "low": 2.0
+  },
+
+  "ltp_insight_table": {
+    "Structure_Learning": {
+      "high": "Learns best with clear syllabus and step-by-step guidance.",
+      "low": "Feels restricted by rigid academic structures."
+    },
+    "Ambiguity_Learning": {
+      "high": "Enjoys open-ended learning without fixed answers.",
+      "low": "Feels lost when tasks lack clear direction."
+    },
+    "Participation_Learning": {
+      "high": "Gains energy from class discussion and teamwork.",
+      "low": "Prefers studying independently."
+    },
+    "Persistence_Learning": {
+      "high": "Sustains motivation in long and difficult courses.",
+      "low": "Loses momentum when work becomes demanding."
+    }
+  },
+
+  "bcfm_insight_table": {
+    "Structure_Work": {
+      "high": "Thrives in standardized systems and repeatable workflows.",
+      "low": "Dislikes rigid procedures and fixed routines."
+    },
+    "Data_Logic": {
+      "high": "Strong analytical and data-driven mindset.",
+      "low": "Avoids numeric or logic-heavy tasks."
+    },
+    "People_Engagement": {
+      "high": "Energized by communication and influence.",
+      "low": "Feels drained by constant social interaction."
+    },
+    "Resilience": {
+      "high": "Handles pressure and setbacks steadily.",
+      "low": "High burnout risk."
+    }
+  },
+
+  "work_style_recommendation": {
+    "Accounting": [
+      "Prefers structured systems with strict standards",
+      "Comfortable working with controls, rules, and audits",
+      "Performs best in predictable environments"
+    ],
+    "Finance": [
+      "Operates well under performance pressure",
+      "Enjoys analytical decision-making with financial data",
+      "Comfortable with responsibility-driven outcomes"
+    ],
+    "Marketing": [
+      "Energized by persuasion and human interaction",
+      "Enjoys flexible goals and creative problem solving",
+      "Performs best in people-centric environments"
+    ],
+    "Digital": [
+      "Thrives in data-logic driven environments",
+      "Enjoys system thinking and automation mindset",
+      "Comfortable blending technical tools with business context"
+    ]
+  },
+
+  "safety_rules": {
+    "flat_profile_rule": {
+      "condition": "abs(ST-3)<=0.3 && abs(DL-3)<=0.3 && abs(PE-3)<=0.3 && abs(RE-3)<=0.3",
+      "output": "Balanced / Undecided – exploration recommended"
+    },
+    "contradiction_rule": {
+      "condition": "(Structure_Work>=4.5 && Ambiguity_Learning>=4.5)",
+      "output": "Inconsistent profile – retest recommended"
+    },
+    "burnout_rule": {
+      "condition": "Resilience<=2.0 && (Structure_Work>=4.0 || Data_Logic>=4.0)",
+      "flag": "High burnout risk"
+    },
+    "weak_signal_rule": {
+      "condition": "max_score - min_score <= 1.0",
+      "output": "Low signal strength – result may be unstable"
+    },
+    "bba_suitability_gate": {
+      "condition": "Structure_Work<=2.0 && Data_Logic<=2.0 && People_Engagement<=2.0 && Resilience<=2.0",
+      "output": "BBA may not fit your current profile – consider non-business majors or retest after skill development"
+    }
+  },
+
+  "ranking_pipeline": [
+    "apply_digital_override",
+    "apply_flat_profile_rule",
+    "apply_contradiction_rule",
+    "apply_burnout_rule",
+    "normalize_scores",
+    "rank_by_final_score",
+    "apply_hybrid_rule",
+    "apply_weak_signal_rule",
+    "apply_bba_suitability_gate"
+  ]
+}
